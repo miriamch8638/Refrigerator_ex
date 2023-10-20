@@ -28,11 +28,11 @@ namespace Refrigerator_ex
         public DateTime ExpiryDate { get; set; }
         public int SpaceInCm { get; set; }
 
-        public Item(string productName, int shelfId, ItemType type, KosherType kosher, DateTime expiryDate, int spaceInCm)
+        public Item(string productName, ItemType type, KosherType kosher, DateTime expiryDate, int spaceInCm)
         {
             ItemId = SetItemId();
             ProductName = productName;
-            ShelfId = shelfId;
+            ShelfId = 0;
             Type = type;
             Kosher = kosher;
             ExpiryDate = expiryDate;
@@ -41,6 +41,11 @@ namespace Refrigerator_ex
         private int SetItemId()
         {
             return ++lastItemfId;
+        }
+        public override string ToString()
+        {
+            return ("the prouduct name is: " +ProductName+"the number id is: "+ItemId+" is locating in shelf: "+"it is take: "+SpaceInCm+" cm"+(ShelfId+1)+"the type is: "+
+               Type+"the kosher is: "+Kosher+ "the ex. date is: "+ ExpiryDate+"\n");
         }
     }
 
