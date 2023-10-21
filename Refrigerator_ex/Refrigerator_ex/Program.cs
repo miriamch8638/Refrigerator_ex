@@ -173,7 +173,7 @@ namespace Refrigerator_ex
                     break;
                 case 100:
                     isRun = false;
-                    break;
+                    return;
 
             }
         }
