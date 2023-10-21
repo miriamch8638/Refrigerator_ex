@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -95,10 +97,12 @@ namespace Refrigerator_ex
                         Console.WriteLine("the item " + itemToRemove.ToString() + "was removed ");
                     }
                 }
-            }catch(Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine("the item was not found");
             }
-                
+
         }
         public void CleanRefrig()
         {
@@ -128,6 +132,123 @@ namespace Refrigerator_ex
             //to print in main massge if the list is empty
             return FoodToEat;
         }
+        public bool Check()
+        {
+            int avilableSpace = AvilableSpace();
+            if (avilableSpace >= 20)
+                return true;
+            return false;
+        }
+
+        public void ThrewDiary(out List<Item> items)
+        {
+            items = new List<Item>();
+            DateTime currentDate = DateTime.Now;
+            TimeSpan moreDays = TimeSpan.FromDays(3);
+            foreach (Shelf shelf in Shelves)
+            {
+                foreach (Item item in shelf.Items)
+                {
+                    if (item.Kosher == KosherType.Dairy && item.ExpiryDate <= currentDate + moreDays)
+                    {
+                        items.Add(item);
+                        RemoveItem(item.ItemId);
+                    }
+                }
+            }
+        }
+        public void ThrewMeat(out List<Item> items)
+        {
+            items = new List<Item>();
+            DateTime currentDate = DateTime.Now;
+            TimeSpan moreDays = TimeSpan.FromDays(7);
+            moreDays = TimeSpan.FromDays(7);
+            foreach (Shelf shelf in Shelves)
+            {
+                foreach (Item item in shelf.Items)
+                {
+                    if (item.Kosher == KosherType.Meat && item.ExpiryDate <= currentDate + moreDays)
+                    {
+                        items.Add(item);
+                        RemoveItem(item.ItemId);
+                    }
+                }
+            }
+        }
+        public void ThrewParve(out List<Item> items)
+        {
+            items = new List<Item>();
+            DateTime currentDate = DateTime.Now;
+            TimeSpan moreDays = TimeSpan.FromDays(1);
+            moreDays = TimeSpan.FromDays(7);
+            foreach (Shelf shelf in Shelves)
+            {
+                foreach (Item item in shelf.Items)
+                {
+                    if (item.Kosher == KosherType.Parve && item.ExpiryDate <= currentDate + moreDays)
+                    {
+                        items.Add(item);
+                        RemoveItem(item.ItemId);
+                    }
+                }
+            }
+        }
+
+        public void ReadyToShopping()
+        {
+            List<Item> items1 = new List<Item>();
+            List<Item> items2 = new List<Item>();
+            List<Item> items3 = new List<Item>();
+            bool isFree = Check();
+            if (isFree == true)
+                Console.WriteLine("you can do shopping");
+
+            else
+            {
+                CleanRefrig();
+                isFree = Check();
+                if (isFree == true)
+                    Console.WriteLine("you can do shopping");
+                else
+                {
+                    ThrewDiary(out items1);
+                    isFree = Check();
+                    if (isFree == true)
+                        Console.WriteLine("you can do shopping Because " +
+                            "we threw out all the dairy products that are valid for less than 3 days ");
+                    else
+                    {
+                        ThrewMeat(out items2);
+                        isFree = Check();
+                        if (isFree == true)
+                            Console.WriteLine("you can do shopping Because" +
+                                 " we threw out  all the dairy products that are valid " +
+                                 " less than 3 days and all the " +
+                                 " meat products that are valid for less than 7 days ");
+                        else
+                        {
+                            ThrewParve(out items3);
+                            isFree = Check();
+                            if (isFree == true)
+                                Console.WriteLine("you can do shopping Because " +
+                                       " we threw out  all the dairy products that are valid " +
+                                       " less than 3 days and all the " +
+                                       " meat products that are valid for less than 7 days " +
+                                       " and all the parve products that are valid for less than 1 days ");
+                            else
+                            {
+                                items1.AddRange(items2);
+                                items2.AddRange(items3);
+                                foreach (Item item in items1)
+                                {
+                                    EnterItem(item);
+                                }
+                                Console.WriteLine(" you cann't do shopping now becouse there is no space!");
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
-

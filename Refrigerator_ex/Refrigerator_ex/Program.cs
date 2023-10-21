@@ -78,8 +78,8 @@ namespace Refrigerator_ex
             r1.EnterItem(milk);
             r1.EnterItem(kola);
             r1.EnterItem(juice);
-            Console.WriteLine(r1.AvilableSpace());
-            Console.WriteLine(r1.ToString());
+            //Console.WriteLine(r1.AvilableSpace());
+            //Console.WriteLine(r1.ToString());
             List<Item> list1 = new List<Item>();
             //7
             //list1 = r1.ChooseFood(KosherType.Parve, ItemType.Drink);
@@ -97,7 +97,7 @@ namespace Refrigerator_ex
             //Console.WriteLine(r1.ToString());
             //Console.WriteLine(r1.AvilableSpace());
 
-            
+
             Refrigerator r2 = new Refrigerator("LG", "White", 6);
             Shelf s8 = new Shelf(1);
             Shelf s9 = new Shelf(2);
@@ -121,17 +121,32 @@ namespace Refrigerator_ex
             r2.EnterItem(kola1);
             r2.EnterItem(juice1);
 
-           //List<Refrigerator> listRefrij = new List<Refrigerator>();
+            //List<Refrigerator> listRefrij = new List<Refrigerator>();
 
-           // listRefrij.Add(r1);
-           // listRefrij.Add(r2);
-           // listRefrij= SortRefrigeratorsBySpace(listRefrij);
-           // foreach (var item in listRefrij)
-           // {
-           //     Console.WriteLine(item);
-           // }
-           
-           // Console.ReadLine();
+            // listRefrij.Add(r1);
+            // listRefrij.Add(r2);
+            // listRefrij= SortRefrigeratorsBySpace(listRefrij);
+            // foreach (var item in listRefrij)
+            // {
+            //     Console.WriteLine(item);
+            // }
+
+
+
+            //*****************************************************************************
+            //The Console
+            int choose;
+            Console.WriteLine(" Press 1: the program will print all the items on the fridge and all its contents.\r\n" +
+                "Press 2: the program will print how much space is left in the refrigerator" +
+                "\r\nClick 3: the program will allow the user to enter the refrigerator.\r\n" +
+                "Click 4: the program will allow the user to remove the item from the refrigerator.\r\n" +
+                "Click 5: the program will clean your refrigerator and print to the user all the checked items.\r\n" +
+                "Click 6: the program will ask the user \"what do you want to eat\"? and will bring you the function to bring a product.\r\nClick 7: the program will print all the products sorted by their expiration date.\r\n" +
+                "Click 8: the program will print all the shelves arranged according to the free space left by them.\r\nClick 9: the program will print all the refrigerators arranged according to the free space left in them.\r\nClick 10: the program will prepare your refrigerator for shopping\r\n" +
+                "Press 100: close the system.");
+            choose=int.Parse(Console.ReadLine());
+
+            Console.ReadLine();
         }
     }
 }
