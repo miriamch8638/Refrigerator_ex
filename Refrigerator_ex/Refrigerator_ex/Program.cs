@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -47,13 +48,138 @@ namespace Refrigerator_ex
                 refrigeratorSpaces.Add(refrigerator, totalSpace);
             }
 
-            // Sort the refrigerators based on total space in descending order
             List<Refrigerator> SortedRefig = r.OrderByDescending(refrigerator => refrigeratorSpaces[refrigerator]).ToList();
             return SortedRefig;
         }
+        public static Item CreateItemFromUserInput()
+        {
+            Console.WriteLine("Enter product name:");
+            string productName = Console.ReadLine();
+
+            Console.WriteLine("Enter item type (Food or Drink):");
+            string itemTypeInput = Console.ReadLine();
+            ItemType itemType = ItemType.Food; // Default to Food
+            if (Enum.TryParse(itemTypeInput, true, out ItemType parsedType))
+            {
+                itemType = parsedType;
+            }
+
+            Console.WriteLine("Enter Kosher type (Meat, Dairy, or Parve):");
+            string kosherTypeInput = Console.ReadLine();
+            KosherType kosherType = KosherType.Parve; // Default to Parve
+            if (Enum.TryParse(kosherTypeInput, true, out KosherType parsedKosher))
+            {
+                kosherType = parsedKosher;
+            }
+
+            Console.WriteLine("Enter expiry date (yyyy-MM-dd):");
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime expiryDate) && expiryDate >= DateTime.Now)
+            {
+                Console.WriteLine("Enter space in centimeters (1-20):");
+                if (int.TryParse(Console.ReadLine(), out int spaceInCm) && spaceInCm > 0 && spaceInCm <= 20)
+                {
+                    // All input is valid, create and return the Item
+                    return new Item(productName, itemType, kosherType, expiryDate, spaceInCm);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid space in centimeters. Item creation failed.");
+                }
+            }
+
+            return null;
+        }
+        public static void oparateChooseFood(Refrigerator r)
+        {
+            List<Item> items = new List<Item>();
+            Console.WriteLine("enter the type of food that you want to eat");
+            Console.WriteLine("Enter item type (Food or Drink):");
+            string itemTypeInput = Console.ReadLine();
+            ItemType itemType = ItemType.Food;
+            if (Enum.TryParse(itemTypeInput, true, out ItemType parsedType))
+            {
+                itemType = parsedType;
+            }
+            else
+            {
+                Console.WriteLine("enter correct type");
+            }
+            Console.WriteLine("Enter Kosher type (Meat, Dairy, or Parve):");
+            string kosherTypeInput = Console.ReadLine();
+            KosherType kosherType = KosherType.Parve;
+            if (Enum.TryParse(kosherTypeInput, true, out KosherType parsedKosher))
+            {
+                kosherType = parsedKosher;
+            }
+            else
+            {
+                Console.WriteLine("enter correct kosher");
+            }
+            items = r.ChooseFood(kosherType, itemType);
+            foreach (var item in items)
+            {
+                item.ToString();
+                Console.WriteLine("\n");
+            }
+        }
+        public static void OptionsOperating(int choice, ref bool isRun, Refrigerator r, List<Refrigerator> refrigeratorsList)
+        {
+            switch (choice)
+            {
+                case 1:
+                    if (r.Shelves != null)
+                    { r.ToString(); }
+                    else
+                        Console.WriteLine("the refrigerator is empty");
+                    break;
+                case 2:
+                    Console.WriteLine(r.AvilableSpace().ToString());
+                    break;
+                case 3:
+                    Item item = CreateItemFromUserInput();
+                    if (item != null)
+                    {
+                        r.EnterItem(item);
+                        Console.WriteLine("was success");
+                    }
+                    else
+                    {
+                        Console.WriteLine("was failed");
+                    }
+                    break;
+                case 4:
+                    Console.WriteLine("enter the number of item id");
+                    int Id = int.Parse(Console.ReadLine());
+                    r.RemoveItem(Id);
+                    break;
+                case 5:
+                    r.CleanRefrig();
+                    r.ToString();
+                    break;
+                case 6:
+                    oparateChooseFood(r);
+                    break;
+                case 7:
+                    SortItemsByDate(r);
+                    break;
+                case 8:
+                    SortShelvesBySpace(r.Shelves);
+                    break;
+                case 9:
+                    SortRefrigeratorsBySpace(refrigeratorsList);
+                    break;
+                case 10:
+                    r.ReadyToShopping();
+                    break;
+                case 100:
+                    isRun = false;
+                    break;
+
+            }
+        }
         static void Main(string[] args)
         {
-            //enter data for checking 
+
             Refrigerator r1 = new Refrigerator("Midea", "White", 7);
             Shelf s1 = new Shelf(1);
             Shelf s2 = new Shelf(2);
@@ -97,7 +223,6 @@ namespace Refrigerator_ex
             //Console.WriteLine(r1.ToString());
             //Console.WriteLine(r1.AvilableSpace());
 
-
             Refrigerator r2 = new Refrigerator("LG", "White", 6);
             Shelf s8 = new Shelf(1);
             Shelf s9 = new Shelf(2);
@@ -121,31 +246,41 @@ namespace Refrigerator_ex
             r2.EnterItem(kola1);
             r2.EnterItem(juice1);
 
-            //List<Refrigerator> listRefrij = new List<Refrigerator>();
+            List<Refrigerator> listRefrij = new List<Refrigerator>();
 
-            // listRefrij.Add(r1);
-            // listRefrij.Add(r2);
+            listRefrij.Add(r1);
+            listRefrij.Add(r2);
             // listRefrij= SortRefrigeratorsBySpace(listRefrij);
             // foreach (var item in listRefrij)
             // {
             //     Console.WriteLine(item);
             // }
 
-
-
             //*****************************************************************************
             //The Console
-            int choose;
-            Console.WriteLine(" Press 1: the program will print all the items on the fridge and all its contents.\r\n" +
-                "Press 2: the program will print how much space is left in the refrigerator" +
-                "\r\nClick 3: the program will allow the user to enter the refrigerator.\r\n" +
-                "Click 4: the program will allow the user to remove the item from the refrigerator.\r\n" +
-                "Click 5: the program will clean your refrigerator and print to the user all the checked items.\r\n" +
-                "Click 6: the program will ask the user \"what do you want to eat\"? and will bring you the function to bring a product.\r\nClick 7: the program will print all the products sorted by their expiration date.\r\n" +
-                "Click 8: the program will print all the shelves arranged according to the free space left by them.\r\nClick 9: the program will print all the refrigerators arranged according to the free space left in them.\r\nClick 10: the program will prepare your refrigerator for shopping\r\n" +
-                "Press 100: close the system.");
-            choose=int.Parse(Console.ReadLine());
-
+            int choice;
+            bool isRun = true;
+            while (isRun==true)
+            {
+                Console.WriteLine(" Press 1: the program will print all the items on the fridge and all its contents.\r\n" +
+            "Press 2: the program will print how much space is left in the refrigerator" +
+            "\r\nClick 3: the program will allow the user to enter the refrigerator.\r\n" +
+            "Click 4: the program will allow the user to remove the item from the refrigerator.\r\n" +
+            "Click 5: the program will clean your refrigerator and print to the user all the checked items.\r\n" +
+            "Click 6: the program will ask the user \"what do you want to eat\"? and will bring you the function to bring a product.\r\nClick 7: the program will print all the products sorted by their expiration date.\r\n" +
+            "Click 8: the program will print all the shelves arranged according to the free space left by them.\r\nClick 9: the program will print all the refrigerators arranged according to the free space left in them.\r\nClick 10: the program will prepare your refrigerator for shopping\r\n" +
+            "Press 100: close the system.\n");
+                Console.WriteLine("enter the number of choice");
+                choice = int.Parse(Console.ReadLine());
+                if (choice >= 1 && choice <= 100)
+                {
+                    OptionsOperating(choice, ref isRun, r1, listRefrij);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid integer between 1 and 100.");
+                }
+            }
             Console.ReadLine();
         }
     }

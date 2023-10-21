@@ -13,20 +13,78 @@ namespace Refrigerator_ex
     public class Refrigerator
     {
         private static int lastRefrigeratorId = 0;
+        private string model;
+        private string color;
+        private int numberOfShelves;
+        private List<Shelf> shelves;
 
         public int RefrigeratorId { get; }
-        public string Model { get; set; }
-        public string Color { get; set; }
-        public int NumberOfShelves { get; set; }
-        public List<Shelf> Shelves { get; set; }
+
+        public string Model
+        {
+            get { return model; }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    model = value;
+                }
+                else
+                {
+                    Console.WriteLine("Model cannot be null or empty.");
+                }
+            }
+        }
+
+        public string Color
+        {
+            get { return color; }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    color = value;
+                }
+                else
+                {
+                    Console.WriteLine("Color cannot be null or empty.");
+                }
+            }
+        }
+
+        public int NumberOfShelves
+        {
+            get { return numberOfShelves; }
+            set
+            {
+                if (value >= 0 && value <= 10)
+                {
+                    numberOfShelves = value;
+                }
+                else
+                {
+                    Console.WriteLine("Number of shelves cannot be negative or more then 10.");
+                }
+            }
+        }
+
+        public List<Shelf> Shelves
+        {
+            get { return shelves; }
+            set { shelves = value; }
+        }
 
         public Refrigerator(string model, string color, int numberOfShelves)
         {
-            RefrigeratorId = ++lastRefrigeratorId;
+            RefrigeratorId = SetRefrigeratorId();
             Model = model;
             Color = color;
             NumberOfShelves = numberOfShelves;
             Shelves = new List<Shelf>();
+        }
+        private int SetRefrigeratorId()
+        {
+            return ++lastRefrigeratorId;
         }
 
         public void AddShelf(Shelf shelf)
@@ -50,17 +108,6 @@ namespace Refrigerator_ex
             }
             return space;
         }
-
-        //foreach (Shelf shelf in Shelves)
-        //{
-        //    if (shelf.CurrentSpace >= item.SpaceInCm)
-        //    {
-        //        shelf.Items.Add(item);
-        //        shelf.CurrentSpace -= item.SpaceInCm;
-        //        item.ShelfId = shelf.ShelfId;
-        //        break;
-        //    }
-        //}
         public void EnterItem(Item item)
         {
             int avilableSpace = AvilableSpace();
